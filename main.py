@@ -30,11 +30,18 @@ for i in vacancies_list:
     salary = i.find("span", {"data-qa": "vacancy-serp__vacancy-compensation"})
     salary = salary.text.split("₽")[0] if salary else "Not stated"
 
-    res.append({
-        "title": title,
-        "link": link,
-        "company_name": company_name,
-        "company_location": company_location,
-        "salary": salary
-    })
+    description = bs4.BeautifulSoup(requests.get(link, headers=headers_dict).text, "lxml").find("div", {
+        "data-qa": "vacancy-description"
+    }).text
+
+
+    if (description.find("Django") != -1 or description.find("Flask") != -1):
+        
+        res.append({
+            "title": title,
+            "link": link,
+            "company_name": company_name,
+            "company_location": company_location,
+            "salary": salary
+        })
 print(res)
