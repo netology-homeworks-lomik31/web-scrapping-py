@@ -1,4 +1,4 @@
-import requests, bs4, fake_headers
+import requests, bs4, fake_headers, json
 from pprint import pprint
 
 headers_dict = fake_headers.Headers("chromium", "macos").generate()
@@ -13,7 +13,6 @@ vacancies_list = vacancies.find_all("div", class_="vacancy-serp-item-body__main-
 
 
 res = []
-# pprint(vacancies_list)
 for i in vacancies_list:
     header = i.find("div").find("h3", {"data-qa": "bloko-header-3", "class": "bloko-header-section-3"})\
         .find("span", {"data-page-analytics-event": "vacancy_search_suitable_item"})\
@@ -44,4 +43,6 @@ for i in vacancies_list:
             "company_location": company_location,
             "salary": salary
         })
-print(res)
+
+with open("./result.json", "w") as f:
+    f.write(json.dumps(res, ensure_ascii=False, indent=4))
